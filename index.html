@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MF Vite #571 Reproduction</title>
+</head>
+<body>
+  <h1>Module Federation Vite - Issue #571 Reproduction</h1>
+  <pre id="log"></pre>
+
+  <!--
+    This reproduces the race condition from https://github.com/module-federation/vite/issues/571
+
+    hostAutoInit (injected by @module-federation/vite into <head>) uses top-level await,
+    which blocks ALL subsequent module scripts on the page per the HTML spec.
+
+    The classic script below simulates a framework (like QUnit) that auto-starts
+    unless a module script disables it first.
+  -->
+
+  <!-- Classic script: simulates a framework that auto-starts (like QUnit from vendor.js) -->
+  <script>
+    window.framework = { started: false, configured: false };
+
+    // Auto-start after current task completes (simulates QUnit autostart behavior)
+    setTimeout(() => {
+      if (!window.framework.configured) {
+        window.framework.started = true;
+        document.getElementById('log').textContent +=
+          'FRAMEWORK: Auto-started (module script was too late!)\n';
+      } else {
+        document.getElementById('log').textContent +=
+          'FRAMEWORK: Configured before auto-start (correct behavior)\n';
+      }
+    }, 0);
+  </script>
+
+  <!-- Inline module script: needs to configure the framework BEFORE it auto-starts -->
+  <script type="module">
+    // This should run before the framework auto-starts, but hostAutoInit's
+    // top-level await delays this module script, causing the race condition.
+    window.framework.configured = true;
+    document.getElementById('log').textContent += 'MODULE: Configured framework\n';
+
+    // Now explicitly start
+    if (window.framework.started) {
+      document.getElementById('log').textContent +=
+        'ERROR: Framework already started before module could configure it!\n';
+      document.getElementById('log').style.color = 'red';
+    } else {
+      window.framework.started = true;
+      document.getElementById('log').textContent += 'MODULE: Started framework (success)\n';
+      document.getElementById('log').style.color = 'green';
+    }
+  </script>
+</body>
+</html>
