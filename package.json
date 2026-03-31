@@ -12,6 +12,6 @@
     "vite": "^8.0.1"
   },
   "dependencies": {
-    "@module-federation/vite": "^1.13.0"
+    "@module-federation/vite": "file:../../../Volumes/code/module-federation/vite"
   }
 }

@@ -56,3 +56,19 @@ npx vite --config vite.config.noMF.js
 4. module script B
 5. load event
 ```
+
+## PR #573 — double base-path with non-root base
+
+PR #573 fixes the execution order issue but introduces a double base-path when `config.base` is non-root:
+
+```bash
+npm install https://pkg.pr.new/@module-federation/vite@573
+npx vite --config vite.config.basepath.js
+```
+
+Open the URL shown in the terminal at `/portal/`. The `hostAutoInit` script 404s because the base path is applied twice:
+
+```
+/portal/portal/node_modules/__mf__virtual/...hostAutoInit...  ← double prefix
+/portal/index.html?html-proxy&index=0.js                      ← correct
+```
