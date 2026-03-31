@@ -6,6 +6,7 @@
 </head>
 <body>
   <h1>Module Federation Vite - Issue #571 Reproduction</h1>
+  <p>Open the browser console to see the execution order.</p>
   <pre id="log"></pre>
 
   <!--
@@ -14,44 +15,65 @@
     hostAutoInit (injected by @module-federation/vite into <head>) uses top-level await,
     which blocks ALL subsequent module scripts on the page per the HTML spec.
 
-    The classic script below simulates a framework (like QUnit) that auto-starts
-    unless a module script disables it first.
+    The classic script below simulates a framework (like QUnit loaded from vendor.js)
+    that checks a config flag set by a module script. Because hostAutoInit delays
+    all module scripts, the config is not set in time.
   -->
 
-  <!-- Classic script: simulates a framework that auto-starts (like QUnit from vendor.js) -->
+  <!-- Classic script: simulates QUnit loading from vendor.js -->
   <script>
-    window.framework = { started: false, configured: false };
-
-    // Auto-start after current task completes (simulates QUnit autostart behavior)
-    setTimeout(() => {
-      if (!window.framework.configured) {
-        window.framework.started = true;
-        document.getElementById('log').textContent +=
-          'FRAMEWORK: Auto-started (module script was too late!)\n';
-      } else {
-        document.getElementById('log').textContent +=
-          'FRAMEWORK: Configured before auto-start (correct behavior)\n';
+    // Simulates QUnit: loads synchronously, checks autostart config.
+    // In the real case, QUnit is loaded from vendor.js (classic script)
+    // and reads QUnit.config.autostart to decide whether to auto-start.
+    window.TestFramework = {
+      config: { autostart: true },  // default: auto-start enabled
+      _started: false,
+      start() {
+        if (this._started) {
+          const msg = 'ERROR: Called start() while tests already started running';
+          console.error(msg);
+          document.getElementById('log').textContent += msg + '\n';
+          document.getElementById('log').style.color = 'red';
+          throw new Error(msg);
+        }
+        this._started = true;
+        console.log('TestFramework: started');
+        document.getElementById('log').textContent += 'TestFramework: started\n';
       }
-    }, 0);
+    };
+
+    // QUnit auto-starts after load event if autostart is true.
+    // Using load event to simulate real QUnit behavior.
+    window.addEventListener('load', () => {
+      if (window.TestFramework.config.autostart) {
+        console.log('TestFramework: auto-starting (autostart=true)');
+        document.getElementById('log').textContent += 'TestFramework: auto-starting (autostart=true)\n';
+        window.TestFramework.start();
+      } else {
+        console.log('TestFramework: autostart disabled, waiting for explicit start()');
+        document.getElementById('log').textContent += 'TestFramework: autostart disabled, waiting for explicit start()\n';
+        document.getElementById('log').style.color = 'green';
+      }
+    });
   </script>
 
-  <!-- Inline module script: needs to configure the framework BEFORE it auto-starts -->
+  <!-- Inline module script: simulates ember-qunit setting autostart=false -->
   <script type="module">
-    // This should run before the framework auto-starts, but hostAutoInit's
-    // top-level await delays this module script, causing the race condition.
-    window.framework.configured = true;
-    document.getElementById('log').textContent += 'MODULE: Configured framework\n';
+    // In the real case, ember-qunit (loaded as ES module) sets
+    // QUnit.config.autostart = false. This MUST run before the load event
+    // fires with autostart=true. But hostAutoInit's top-level await
+    // delays this module script, so autostart stays true.
+    window.TestFramework.config.autostart = false;
+    console.log('Module: set autostart=false');
+    document.getElementById('log').textContent += 'Module: set autostart=false\n';
+  </script>
 
-    // Now explicitly start
-    if (window.framework.started) {
-      document.getElementById('log').textContent +=
-        'ERROR: Framework already started before module could configure it!\n';
-      document.getElementById('log').style.color = 'red';
-    } else {
-      window.framework.started = true;
-      document.getElementById('log').textContent += 'MODULE: Started framework (success)\n';
-      document.getElementById('log').style.color = 'green';
-    }
+  <!-- Inline module script: simulates ember-exam calling start() -->
+  <script type="module">
+    // ember-exam explicitly starts tests after setup
+    console.log('Module: calling start()');
+    document.getElementById('log').textContent += 'Module: calling start()\n';
+    window.TestFramework.start();
   </script>
 </body>
 </html>
