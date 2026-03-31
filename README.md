@@ -42,3 +42,17 @@ npm install @module-federation/vite@1.13.0
 ```
 
 Restart dev server after switching.
+
+## Without the plugin (baseline)
+
+```bash
+npx vite --config vite.config.noMF.js
+```
+
+```
+1. classic script A
+3. classic script B
+2. module script A
+4. module script B
+5. load event
+```
