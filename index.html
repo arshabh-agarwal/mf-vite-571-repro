@@ -15,24 +15,34 @@
             }
         </script>
 
+        <!--Inline classical script-->
         <script>
             log("1. classic script A");
         </script>
 
+        <!--Inline classical script-->
         <script>
             log("2. classic script B");
         </script>
 
+        <!--Inline module script-->
         <script type="module">
             log("3. module script A");
         </script>
 
+        <!--Inline module script-->
         <script type="module">
             log("4. module script B");
         </script>
+
+        <!--Inline module script-->
         <script type="module" src="/src/main.js"></script>
+
+        <!--Inline module script-->
+        <script type="module" src="/src/main2.js"></script>
+
         <script>
-            window.addEventListener("load", () => log("6. load event"));
+            window.addEventListener("load", () => log("7. load event"));
         </script>
     </body>
 </html>

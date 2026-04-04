@@ -15,8 +15,8 @@ Open the URL shown in the terminal.
 
 ```
 1. classic script A
-3. classic script B
-2. module script A
+2. classic script B
+3. module script A
 4. module script B
 5. load event
 ```
@@ -25,9 +25,9 @@ Open the URL shown in the terminal.
 
 ```
 1. classic script A
-3. classic script B
+2. classic script B
 5. load event
-2. module script A/B
+3. module script A/B
 4. module script B/A
 ```
 
@@ -51,8 +51,8 @@ npx vite --config vite.config.noMF.js
 
 ```
 1. classic script A
-3. classic script B
-2. module script A
+2. classic script B
+3. module script A
 4. module script B
 5. load event
 ```
@@ -95,3 +95,32 @@ Expected:
 ```
 
 This only occurs when the HTML has an external `<script type="module" src="...">` (triggering the `rewriteEntryScripts` code path). Apps with only inline module scripts use the `injectEntryScript` fallback, which is unaffected.
+
+## pre-release - @module-federation/vite@597 - external module script execution order issue
+
+Execution order of external module scripts, and the load event changes between 1.12.3 and @module-federation/vite@597.
+
+### With `@module-federation/vite@1.12.3`
+
+```
+1. classic script A
+2. classic script B
+3. module script A
+4. module script B
+5. external module script A
+6. external module script B
+7. load event
+```
+
+### With `https://pkg.pr.new/@module-federation/vite@597`
+
+```
+1. classic script A
+2. classic script B
+3. module script A
+4. module script B
+7. load event                              ⃪ Load event fires before external module scripts
+5/6. external module script A/B
+6/5. external module script B/A
+```
+External Module scripts execute after the load event, and their relative order is non-deterministic.

@@ -63,7 +63,7 @@ packages:
     resolution: {integrity: sha512-YpTLzM7H9damh31JX7eFBiCCR1mbibzS4i4JEa4fZ5ICT4hfNIuaAx1OeICGDOzSdl35TYegegCjk91oX6xCJQ==}
 
   '@module-federation/vite@https://pkg.pr.new/@module-federation/vite@597':
-    resolution: {integrity: sha512-sRgD4FTJaRTwlk1+u0KCJB8nn83f9tbuU5AVuXGbExBWUBdOMM9/qTtfsT0zsOASdDv9b0kI+v0/nRVNF0M68w==, tarball: https://pkg.pr.new/@module-federation/vite@597}
+    resolution: {tarball: https://pkg.pr.new/@module-federation/vite@597}
     version: 1.14.1
     peerDependencies:
       vite: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
