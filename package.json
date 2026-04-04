@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:basepath": "vite --config vite.config.basepath.js",
     "build": "vite build",
+    "build:basepath": "vite build --config vite.config.basepath.js",
     "preview": "vite preview"
   },
   "devDependencies": {

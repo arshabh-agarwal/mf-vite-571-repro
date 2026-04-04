@@ -1,12 +1,12 @@
-import { defineConfig } from 'vite'
-import { federation } from '@module-federation/vite'
+import { defineConfig } from "vite";
+import { federation } from "@module-federation/vite";
 
 export default defineConfig({
   plugins: [
     federation({
-      name: 'repro',
+      name: "repro",
       remotes: {},
       shared: [],
     }),
   ],
-})
+});
