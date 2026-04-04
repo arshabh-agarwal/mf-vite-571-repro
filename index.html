@@ -19,12 +19,12 @@
             log("1. classic script A");
         </script>
 
-        <script type="module">
-            log("2. module script A");
+        <script>
+            log("2. classic script B");
         </script>
 
-        <script>
-            log("3. classic script B");
+        <script type="module">
+            log("3. module script A");
         </script>
 
         <script type="module">
@@ -32,7 +32,7 @@
         </script>
         <script type="module" src="/src/main.js"></script>
         <script>
-            window.addEventListener("load", () => log("5. load event"));
+            window.addEventListener("load", () => log("6. load event"));
         </script>
     </body>
 </html>

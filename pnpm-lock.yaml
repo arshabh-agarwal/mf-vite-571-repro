@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@module-federation/vite':
-        specifier: ^1.14.0
-        version: 1.14.0(typescript@5.9.3)(vite@8.0.3(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1))
+        specifier: https://pkg.pr.new/@module-federation/vite@597
+        version: https://pkg.pr.new/@module-federation/vite@597(typescript@5.9.3)(vite@8.0.3(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1))
     devDependencies:
       vite:
         specifier: ^8.0.1
@@ -62,8 +62,9 @@ packages:
   '@module-federation/third-party-dts-extractor@2.3.1':
     resolution: {integrity: sha512-YpTLzM7H9damh31JX7eFBiCCR1mbibzS4i4JEa4fZ5ICT4hfNIuaAx1OeICGDOzSdl35TYegegCjk91oX6xCJQ==}
 
-  '@module-federation/vite@1.14.0':
-    resolution: {integrity: sha512-RBUbUrCrpsjteNYAw21tKRLvTtAtKYkJz4GZKF2R5vEuVR1zQ42l4PC3c9b6ERj9wVfkKDHNWUdXfR5NAZ92Gw==}
+  '@module-federation/vite@https://pkg.pr.new/@module-federation/vite@597':
+    resolution: {integrity: sha512-sRgD4FTJaRTwlk1+u0KCJB8nn83f9tbuU5AVuXGbExBWUBdOMM9/qTtfsT0zsOASdDv9b0kI+v0/nRVNF0M68w==, tarball: https://pkg.pr.new/@module-federation/vite@597}
+    version: 1.14.1
     peerDependencies:
       vite: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
 
@@ -667,7 +668,7 @@ snapshots:
       fs-extra: 9.1.0
       resolve: 1.22.8
 
-  '@module-federation/vite@1.14.0(typescript@5.9.3)(vite@8.0.3(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1))':
+  '@module-federation/vite@https://pkg.pr.new/@module-federation/vite@597(typescript@5.9.3)(vite@8.0.3(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1))':
     dependencies:
       '@module-federation/dts-plugin': 2.3.1(typescript@5.9.3)
       '@module-federation/runtime': 2.3.1
